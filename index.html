@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>MatchBall4</title>
+    <title>Bolita Match - Versión Mejorada</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -77,11 +77,12 @@
 
         .controls {
             display: flex;
-            gap: 15px;
-            padding: 15px;
+            gap: 10px;
+            padding: 10px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            align-items: center;
         }
 
         .joystick-container {
@@ -118,7 +119,8 @@
 
         .action-buttons {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            flex-shrink: 0;
         }
 
         .btn {
@@ -296,7 +298,19 @@
 
         @media (max-width: 500px) {
             .controls {
-                flex-direction: column;
+                flex-direction: row;
+                padding: 8px;
+                gap: 8px;
+            }
+            
+            .joystick {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .joystick-knob {
+                width: 45px;
+                height: 45px;
             }
             
             .btn {
@@ -312,13 +326,44 @@
             .game-complete h2 {
                 font-size: 1.8rem;
             }
+            
+            .action-buttons {
+                gap: 8px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .btn {
+                width: 65px;
+                height: 65px;
+                font-size: 0.8rem;
+            }
+            
+            .joystick {
+                width: 65px;
+                height: 65px;
+            }
+            
+            .joystick-knob {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .controls {
+                padding: 6px;
+                gap: 6px;
+            }
+            
+            .action-buttons {
+                gap: 6px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>MatchBall4 <i class="fas fa-bolt"></i></h1>
+            <h1>BOLITA MATCH <i class="fas fa-bolt"></i></h1>
             <div class="stats">
                 <div class="score">Puntos: <span id="score">0</span></div>
                 <div class="level">Nivel: <span id="level">1</span>/10</div>
@@ -378,7 +423,8 @@
         </div>
         
         <div class="instructions">
-            <i class="fas fa-info-circle"></i> Usa la palanca para cambiar la dirección de la bolita; presiona "MATCH!" cuando esta esté dentro de un círculo para que desaparezca y puedes activar el "FRENO" cada 300 puntos para reducir la velocidad.
+            <i class="fas fa-info-circle"></i> Usa la palanca para cambiar dirección. Presiona MATCH! cuando la bolita esté dentro de un círculo.
+            FRENO se activa cada 300 puntos.
         </div>
     </div>
 
