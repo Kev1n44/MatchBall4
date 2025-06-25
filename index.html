@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Bolita Match - Versión Mejorada</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,13 +14,18 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             color: white;
+            padding: 0;
         }
 
         .container {
@@ -31,6 +36,9 @@
             display: flex;
             flex-direction: column;
             padding: 10px;
+            flex: 1;
+            min-height: 0; /* Permite que el contenido se expanda */
+            overflow-y: auto; /* Permite scroll si es necesario */
         }
 
         header {
@@ -40,6 +48,7 @@
             border-radius: 20px;
             margin-bottom: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
         }
 
         h1 {
@@ -61,6 +70,7 @@
 
         .game-container {
             flex: 1;
+            min-height: 200px; /* Altura mínima para asegurar visibilidad */
             background: rgba(0, 0, 0, 0.4);
             border-radius: 20px;
             position: relative;
@@ -83,6 +93,21 @@
             border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             align-items: center;
+            flex-shrink: 0; /* Evita que se encoja */
+            position: relative;
+        }
+
+        .controls-warning {
+            display: none;
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #ffcc00;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
         }
 
         .joystick-container {
@@ -197,6 +222,7 @@
             background: rgba(0, 0, 0, 0.3);
             border-radius: 10px;
             margin-top: 10px;
+            flex-shrink: 0;
         }
 
         .game-over, .level-complete, .game-complete {
@@ -295,6 +321,12 @@
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-50px); opacity: 0; }
         }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
 
         @media (max-width: 500px) {
             .controls {
@@ -330,6 +362,10 @@
             .action-buttons {
                 gap: 8px;
             }
+            
+            .controls-warning {
+                display: block; /* Solo visible en móviles cuando sea necesario */
+            }
         }
         
         @media (max-width: 380px) {
@@ -356,6 +392,40 @@
             
             .action-buttons {
                 gap: 6px;
+            }
+            
+            .instructions {
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-height: 700px) {
+            .game-container {
+                min-height: 150px;
+            }
+            
+            .instructions {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            header {
+                padding: 8px 0;
+                margin-bottom: 8px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .stats {
+                font-size: 0.95rem;
+            }
+            
+            .game-container {
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -405,6 +475,7 @@
         </div>
         
         <div class="controls">
+            <div class="controls-warning" id="controlsWarning">¡Usa el scroll para ver todos los controles!</div>
             <div class="joystick-container">
                 <div class="joystick">
                     <div class="joystick-knob" id="joystick"></div>
@@ -448,16 +519,34 @@
         const currentLevelElement = document.getElementById('current-level');
         const brakeIndicator = document.getElementById('brakeIndicator');
         const nextLevelElement = document.getElementById('next-level');
+        const controlsWarning = document.getElementById('controlsWarning');
         
         // Ajustar tamaño del canvas
         function resizeCanvas() {
             const gameContainer = canvas.parentElement;
             canvas.width = gameContainer.clientWidth;
             canvas.height = gameContainer.clientHeight;
+            
+            // Verificar si los controles están visibles
+            checkControlsVisibility();
+        }
+        
+        // Verificar si los controles son visibles
+        function checkControlsVisibility() {
+            const controlsRect = document.querySelector('.controls').getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            if (controlsRect.bottom > windowHeight) {
+                controlsWarning.style.display = 'block';
+            } else {
+                controlsWarning.style.display = 'none';
+            }
         }
         
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('scroll', checkControlsVisibility);
+        window.addEventListener('orientationchange', resizeCanvas);
         
         // Variables del juego
         let gameRunning = true;
