@@ -574,11 +574,6 @@
             const gameContainer = canvas.parentElement;
             canvas.width = gameContainer.clientWidth;
             canvas.height = gameContainer.clientHeight;
-            
-            // Redimensionar en caso de cambios
-            if (gameRunning) {
-                initLevel();
-            }
         }
         
         resizeCanvas();
@@ -696,6 +691,9 @@
             
             // Actualizar estado del freno
             updateBrakeButton();
+            
+            // Dibujar inmediatamente después de inicializar
+            draw();
         }
         
         // Actualizar botón de freno
